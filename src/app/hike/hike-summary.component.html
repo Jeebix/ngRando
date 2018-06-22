@@ -1,0 +1,16 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><a [routerLink]="['/hikes', hike.id]">{{ hike.name | uppercase }}</a></h3>
+        <!-- Utilisation du pipe uppercase (déjà fournit)-->
+        <!-- Permet de changer le nom de la rando en lien avec comme chemin '/hike' + id -->
+    </div>
+    <div class="panel-body">
+        {{ hike.description }}
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="" (change)="toggleAsTodoHike($event.target.checked)" />Rando à faire
+                <!-- '$event' permet de capturer l'objet de l'évènement en lui passant ce paramètre -->
+            </label>
+        </div>
+    </div>
+</div>

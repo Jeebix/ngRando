@@ -1,0 +1,30 @@
+<h2>Liste de randonnée</h2>
+<div>
+	Filtrer par : <input type="text" [(ngModel)]="searchTerm" placeholder="mots-clés..." />
+	<!-- Two way binding: communication avec [] depuis TypeScript vers le Template et avec () depuis Template vers TypeScript -->
+</div>
+<br />
+<div class="alert alert-danger" role="alert"*ngIf="errorMessage.length > 0">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span class="sr-only">Erreur de communication avec le serveur </span>
+    {{errorMessage}}
+</div>
+<!-- structural directive : ex ng-for, Penser * pour directive qui modifie le DOM -->
+<div>
+	<ul>
+		<!-- CustomPipe hikeFilter avec variable -->
+		<!-- Directive pour parcourir tableau hike avec "for...of", crée variable hikes à partir du tableau hikes -->
+		<li *ngFor="let hike of hikes | hikeFilter:searchTerm" [@onHikesDisplay]="'onFirstDisplay'">
+			<!-- Plus lisible avec ce component en plus -->
+			<hike-summary [hike]="hike" (togglehikeasfavorite)="toggleToMyTodoHikes($event)"></hike-summary>
+			<!-- custom event (addhikesasfavorite) utilisé pour event handler (addToMyTodoHike) en capturant l'objet $event (randonnée) -->
+		</li>
+	</ul>	
+</div>
+
+<!-- Input parameter: [paramètre] à passer dasn component enfant (hike-summary) et "ce que l'on veut passer en paramètre" -->
+<!-- Dans component: décorateur type @Input, nom du paramètre, titre du paramètre -->
+
+<!-- Output parameter: on a créé un "custom event" dans le component enfant "hike-summary" -->
+<!-- on lui envoie une randonnée en playload ($event) -->
+

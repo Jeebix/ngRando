@@ -1,0 +1,81 @@
+<div class="row">
+	<h2>Carte de notre prochaine randonnée</h2>
+
+	<div>
+		<input type="text" class="start" value="" placeholder="votre point de départ" [(ngModel)]="startingPoint"> <!-- two-way-binding, envoie ce qui est tapé dans champ texte -->
+		<!-- Penser importer FormsModule si ngModel -->
+		<button class="btn btn-sm btn-primary" (click)="geocode()">localiser</button>
+		<button class="btn btn-sm btn-danger" (click)="resetStartingPoint()">remise à zéro</button>
+	</div>
+	<br />
+	<div>
+		<!-- Evènement submit à gérer avec fct callback addMarkerByCoords() -->
+		<form (submit)="addMarkerByCoords(form.value)" #form="ngForm">
+			<!-- On récupère la valeur du formulaire avec la variable de template #var
+			qui a pour valeur ngForm (objet créé auto si balise de formulaire) dans
+			la fonction callback addMarkerByCoords() -->
+			<label for="markerByCoordsLat">Latitude</label>
+			<input type="text" name="markerByCoordsLat" ngModel id="markerByCoordsLat">
+			<!-- ngModel associe la valeur de l'input (name) à l'objet angular -->
+			<label for="markerByCoordsLng">Longitude</label>
+			<input type="text" name="markerByCoordsLng" ngModel id="markerByCoordsLng">
+
+			<button type="submit" class="btn btn-sm btn-success">ajouter</button>
+		</form>
+	</div>
+
+	{{ form.value | json }} <!-- Pipe json, pour exemple -->
+
+	<!-- this creates a google map on the page with the given lat/lng from -->
+	<!-- the component as the initial center of the map: -->
+	<agm-map [latitude]="lat" [longitude]="lng">
+	  	<agm-marker 
+	  		[latitude]="lat" 
+            [longitude]="lng" 
+            [markerDraggable]="true"
+            [title]="markerTitle"
+            (dragEnd)="onCoordMarkerDropped($event)"
+            [iconUrl]="icon"
+	  	></agm-marker>
+	  	<!-- Input parameters ([latitude] et [longitude]) -->
+	  	<!-- [] implique valeur à interpréter côté TypeScript -->
+	  	<!-- (évènement)="event-handler" -->
+
+	  	<!-- Appel au tableau "marker" pour afficher un marker à l'appel de geocode() -->
+	  	<agm-marker *ngFor="let m of markers; let i = index"
+	  		[latitude]="m.lat" 
+            [longitude]="m.lng" 
+            [markerDraggable]="m.draggable"
+            [title]="m.title"
+            (dragEnd)="updatePolyline($event)"
+            [iconUrl]="m.icon"
+	  	></agm-marker>
+
+	  	<agm-marker *ngFor="let m of markersFromCoords; let i = index"
+	  		[latitude]="m.lat" 
+            [longitude]="m.lng" 
+            [markerDraggable]="m.draggable"
+            [title]="m.title"
+            [iconUrl]="m.icon"
+	  	></agm-marker>
+
+	  	<agm-polyline> <!-- [strokeColor]="red" -->
+	  		<agm-polyline-point
+	  			*ngFor="let point of pointsForPolyline"
+	  			[latitude]="point.lat"
+	  			[longitude]="point.lng"
+	  			>
+	  			<!-- Doc Google permet de trouver propriétés -->
+
+	  		</agm-polyline-point>
+	  	</agm-polyline>
+	</agm-map>
+
+	<div *ngIf="markerWasDropped">
+		<p>latitude : {{ droppedLat }} - longitude : {{ droppedLng }}</p>
+	</div>
+
+	<div *ngIf="!markerWasDropped">
+		<p>Veuillez <b>déplacer le marqueur</b> pour obtenir des coordonnées GPS (<b>latitude</b> et <b>longitude</b>)</p>
+	</div>
+</div>

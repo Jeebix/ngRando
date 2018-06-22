@@ -1,0 +1,58 @@
+<!-- 2 façons de gérer les formulaires avec Angular: via TemplateDrivenForm ou via ReactiveForm -->
+<!-- #variable permet de déclarer une variable de template, accessble dans tout le template (via 'variable') -->
+
+<h2>Contactez-nous</h2>
+
+<!-- ngForm représente un objet qui représente le formulaire (automatoquement associé)-->
+<form #form="ngForm" (submit)="sendMessage(form)" novalidate> <!-- Data-binding avec gestion évènement (submit), eventHandler sendMessage avec 'form' (le formulaire) en paramètre -->
+	<div class="form-group"
+		 [class.has-error]="msgSubject.invalid && msgSubject.touched"> <!-- Ajout de la classe si, [classe] si ="condition" -->
+		<label for="subject" class="control-label">Sujet</label>
+		<input type="text"
+				#msgSubject="ngModel"
+				required
+				[(ngModel)]="subject"
+				id="subject"
+				name="subject"
+				class="form-control"
+				placeholder="sujet" />
+		<div *ngIf="msgSubject.invalid && msgSubject.touched">sujet manquant</div>
+		<!-- Directive structurelle *ngIf permet d'afficher la div si condition évaluée à true -->
+	</div>
+	<div class="form-group"
+	    [class.has-error]="msgContent.invalid && msgContent.touched">
+		<label for="message" class="control-label">Message</label>
+		<textarea type="text"
+					rows="3" 
+					#msgContent="ngModel"
+					required
+					[(ngModel)]="content"
+					id="content"
+					name="content"
+					class="form-control"
+					placeholder="message">
+		</textarea>
+	</div>
+	<div class="form-group">
+		<label for="service" class="control-label">Message</label>
+		<select [(ngModel)]="service" id="service" name="service" class="form-control">
+			<option value="">---</option>
+			<option value="tech">technique</option>
+			<option value="sales">commercial</option>
+			<option value="guide">guide moyenne montagne</option>
+		</select>
+	</div>
+	<button type="submit" class="btn btn-primary" [disabled]="form.invalid">envoyer</button>
+</form>
+Formulaire valide ? {{ form.valid }}
+
+Form: {{ form.value | json }} <!-- Valeur du formulaire pipée en objet json
+Permet de voir le résultat grâce à la directive ngModel: Form: { "subject": "", "message": "", "service": "" } -->
+Sujet: {{ msgSubject.valid }} <!-- Propriété de validation du champ -->
+Form: {{ form.valid | json }} <!-- Peut tester la validité sur tout le formulaire -->
+
+<!-- 3 propriétés de validation: valid, untouched/touched, pristine
+untouched/touched: blur ou focus
+pristine/dirty: champ vide ou qqchose de saisi
+valid/invalid: état en relation avec règles (avec required par exemple)
+(ces états sont valables jusqu'au rafraîchissement de la page) -->

@@ -1,0 +1,20 @@
+<div>{{ title }}</div> <!-- String interpolation -->
+
+<div>
+    <a class="btn btn-default" (click)='goBack()'> <!-- Event binding, pour écouter un évènement, ici 'click' -->
+		<i class='glyphicon glyphicon-arrow-left'></i> retour !!
+	</a>
+</div>
+
+<div *ngIf="hike">
+	<h2>{{ hike.name }}</h2>
+	<div>{{ hike.region }} - {{ hike.area }}</div>
+	<div>
+		<p>départ : {{ hike.startingPoint }}</p>
+		<p>distance : {{ hike.distance}} {{ hike.distanceUnit }}</p>
+		<p>durée : {{ hike.duration }} minutes</p>
+		<p>description : {{ hike.description }}</p>
+	</div>
+</div>
+
+<div *ngIf="!hike">Pas de randonnées correspondante trouvée</div>
